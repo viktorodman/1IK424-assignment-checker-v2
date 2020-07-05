@@ -3,7 +3,7 @@ import { GlobalContext } from '../context/GlobalContext'
 import { Container, Grid, TextField, Button } from '@material-ui/core'
 
 const CheckWebsiteForm = () => {
-  const { currentURL, setURL } = useContext(GlobalContext)
+  const { currentURL, setURL, setUrlToCheck } = useContext(GlobalContext)
 
   const handleChange = (e) => {
     setURL(e.target.value)
@@ -15,7 +15,7 @@ const CheckWebsiteForm = () => {
     if (currentURL) {
       const checkedURL = checkURL(currentURL)
       setURL(checkedURL)
-      console.log(checkedURL)
+      setUrlToCheck(checkedURL)
     }
   }
 
