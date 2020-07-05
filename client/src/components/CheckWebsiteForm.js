@@ -13,9 +13,15 @@ const CheckWebsiteForm = () => {
     e.preventDefault()
 
     if (currentURL) {
-      console.log('Submitting current URL', currentURL)
+      const checkedURL = checkURL(currentURL)
+      setURL(checkedURL)
+      console.log(checkedURL)
     }
   }
+
+  const checkURL = (url) =>
+    url && !url.includes('http') ? 'http://' + url : url
+
   return (
     <div className='check-website-form'>
       <Container maxWidth='sm'>
