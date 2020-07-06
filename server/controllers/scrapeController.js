@@ -7,6 +7,15 @@ scrapeController.scrape = async (req, res, next) => {
   const url = req.params[0]
 
   const result = await scrapeMainPage(url)
+
+  if (result.navLinks && result.navLinks.length) {
+    const subPages = []
+    for (const link of result.navLinks) {
+      const elements = await scrapeSubPage(link)
+      subPages.push({ page: link, elements })
+    }
+    result.subPages = subPages
+  }
   res.send(result)
 }
 
@@ -21,12 +30,23 @@ const scrapeMainPage = (url) => {
       const p = $('p').length
       const columns = $('div.wp-block-column').length
 
+      const navLinks = []
+
+      $('a').each((i, e) => {
+        const subPageLink = $(e).attr('href')
+        const linkToAdd = getSubPageLinks(subPageLink, url, navLinks)
+        if (linkToAdd) {
+          navLinks.push(linkToAdd)
+        }
+      })
+
       return {
         h1,
         h2,
         h3,
         p,
-        columns
+        columns,
+        navLinks,
       }
     })
     .catch((err) => {
@@ -40,8 +60,55 @@ const setupOptions = (url) => {
     uri: url,
     transform: (body) => {
       return cheerio.load(body)
+    },
+  }
+}
+
+const getSubPageLinks = (subPageLink, submittedUrl, linksArray) => {
+  if (subPageLink && subPageLink.startsWith('http')) {
+    const trimmedLink = stripTrailingSlash(
+      subPageLink.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '')
+    )
+
+    const trimmedUrl = stripTrailingSlash(
+      submittedUrl.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '')
+    )
+
+    if (
+      trimmedLink &&
+      trimmedLink !== trimmedUrl &&
+      trimmedLink.startsWith(trimmedUrl) &&
+      !trimmedLink.includes('/?') &&
+      !linksArray.includes(trimmedLink) &&
+      !linksArray.includes(subPageLink) &&
+      trimmedLink.includes(trimmedUrl)
+    ) {
+      return subPageLink
     }
   }
+}
+
+const stripTrailingSlash = (str) => {
+  return str.endsWith('/') ? str.slice(0, -1) : str
+}
+
+const scrapeSubPage = (url) => {
+  const options = setupOptions(url)
+
+  return rp(options)
+    .then(($) => {
+      const h1 = $('h1').length
+      const p = $('p').length
+
+      return {
+        h1,
+        p,
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+      return { error: 'Failed to scrape sub page' }
+    })
 }
 
 module.exports = scrapeController
