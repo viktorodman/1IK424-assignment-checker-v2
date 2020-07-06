@@ -1,10 +1,29 @@
 import React, { useEffect, useContext, useState } from 'react'
 import { GlobalContext } from '../context/GlobalContext'
-import { Container, CircularProgress } from '@material-ui/core'
+import {
+  Container,
+  CircularProgress,
+  Typography,
+  List,
+  ListItem,
+  ListItemIcon,
+  Tooltip,
+  Divider,
+  ListSubheader,
+  Paper
+} from '@material-ui/core'
+import CheckCircleIcon from '@material-ui/icons/CheckCircle'
+import ErrorIcon from '@material-ui/icons/Error'
 
 const AssignmentChecker = () => {
-  const { urlToCheck } = useContext(GlobalContext)
   const [isLoading, setLoading] = useState(false)
+  const {
+    urlToCheck,
+    setUrlToCheck,
+    elements,
+    setElements,
+    setAllTestsPass
+  } = useContext(GlobalContext)
 
   useEffect(() => {
     if (urlToCheck) {
@@ -12,27 +31,194 @@ const AssignmentChecker = () => {
     }
   }, [urlToCheck])
 
+  useEffect(() => {
+    setAllTestsPass(false)
+
+    if (!isObjectEmpty(elements)) {
+      checkAllTestsPass()
+    }
+  }, [elements])
+
   const correctAssignment = async (url) => {
     setLoading(true)
-
+    setElements({})
     const elements = await getWebsiteElements(url)
     setLoading(false)
+    setElements(elements)
+    setUrlToCheck('')
+
     console.log(elements)
   }
 
   const getWebsiteElements = async (url) => {
-    const res = await window.fetch('/api/scrape/http://google.se', {
+    const res = await window.fetch(`/api/scrape/${url}`, {
       headers: {
-        Accept: 'application/json',
-      },
+        Accept: 'application/json'
+      }
     })
     const json = await res.json()
     return json
   }
+
+  const isObjectEmpty = (obj) => {
+    return Object.keys(obj).length === 0 && obj.constructor === Object
+  }
+
+  const hasSubPages = () => {
+    return elements.subPages && elements.subPages.length
+  }
+
+  const checkAllTestsPass = () => {
+    const { h1, h2, h3, p, columns, subPages } = elements
+
+    if (
+      h1 === 1 &&
+      p >= 1 &&
+      (h2 >= 2 || h3 >= 2) &&
+      columns >= 2 &&
+      hasSubPages() &&
+      subPages[0].elements.h1 === 1 &&
+      subPages[0].elements.p
+    ) {
+      setAllTestsPass(true)
+    }
+  }
+
+  const renderSubPageResults = () => {
+    return elements.subPages.map((page) => (
+      <List
+        key={page.page}
+        subheader={
+          <ListSubheader component='div' disableSticky>
+            Sub page {page.page}
+          </ListSubheader>
+        }
+      >
+        <ListItem>
+          <ListItemIcon>
+            {page.elements.h1 ? (
+              <CheckCircleIcon color='primary' />
+            ) : (
+              <ErrorIcon color='error' />
+            )}
+          </ListItemIcon>
+          Heading One: Found {page.elements.h1}
+        </ListItem>
+        <ListItem>
+          <ListItemIcon>
+            {page.elements.p ? (
+              <CheckCircleIcon color='primary' />
+            ) : (
+              <ErrorIcon color='error' />
+            )}
+          </ListItemIcon>
+          Paragraphs: Found {page.elements.p}
+        </ListItem>
+      </List>
+    ))
+  }
+
   return (
     <div className='assignment-checker'>
       <Container maxWidth='sm'>
-        {isLoading ? <CircularProgress /> : <p>Finished loading...</p>}
+        {isLoading ? (
+          <CircularProgress />
+        ) : elements && elements.error ? (
+          <Typography variant='body1' color='error'>
+            Failed to scan the submitted website. Make sure that the URL is
+            correct.
+          </Typography>
+        ) : (
+          !isObjectEmpty(elements) && (
+            <>
+              <Paper>
+                <Typography variant='h6' component='h3'>
+                  Results
+                </Typography>
+                <List>
+                  <ListItem>
+                    <ListItemIcon>
+                      {elements.h1 && elements.h1 === 1 ? (
+                        <CheckCircleIcon color='primary' />
+                      ) : (
+                        <Tooltip
+                          title='A heading at level one (h1) is missing'
+                          placement='right'
+                        >
+                          <ErrorIcon color='error' />
+                        </Tooltip>
+                      )}
+                    </ListItemIcon>
+                    Heading One: Found {elements.h1}
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon>
+                      {elements.h2 >= 2 || elements.h3 >= 2 ? (
+                        <CheckCircleIcon color='primary' />
+                      ) : (
+                        <Tooltip
+                          title='There should be at least two headings at level two or three (h2 / h3)'
+                          placement='right'
+                        >
+                          <ErrorIcon color='error' />
+                        </Tooltip>
+                      )}
+                    </ListItemIcon>
+                    Heading Two or Three: Found {elements.h2 + elements.h3}
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon>
+                      {elements.p ? (
+                        <CheckCircleIcon color='primary' />
+                      ) : (
+                        <Tooltip
+                          title='There should be at least one paragraph on the main page (p element)'
+                          placement='right'
+                        >
+                          <ErrorIcon color='error' />
+                        </Tooltip>
+                      )}
+                    </ListItemIcon>
+                    Paragraphs: Found {elements.p}
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon>
+                      {elements.columns >= 2 ? (
+                        <CheckCircleIcon color='primary' />
+                      ) : (
+                        <Tooltip
+                          placement='right'
+                          title='If you did not use the Gutenberg editor, we will not find any columns. Do not worry, you can still hand in and we will verify.'
+                        >
+                          <ErrorIcon color='error' />
+                        </Tooltip>
+                      )}
+                    </ListItemIcon>
+                    Columns: Found {elements.columns}
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon>
+                      {hasSubPages() ? (
+                        <CheckCircleIcon color='primary' />
+                      ) : (
+                        <Tooltip
+                          title='There should be a link to at least one sub page on the main page'
+                          placement='right'
+                        >
+                          <ErrorIcon color='error' />
+                        </Tooltip>
+                      )}
+                    </ListItemIcon>
+                    Sub pages: Found{' '}
+                    {hasSubPages() ? elements.subPages.length : 0}
+                  </ListItem>
+                </List>
+                <Divider />
+                {hasSubPages() && renderSubPageResults()}
+              </Paper>
+            </>
+          )
+        )}
       </Container>
     </div>
   )

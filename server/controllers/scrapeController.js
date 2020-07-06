@@ -46,7 +46,7 @@ const scrapeMainPage = (url) => {
         h3,
         p,
         columns,
-        navLinks,
+        navLinks
       }
     })
     .catch((err) => {
@@ -60,19 +60,14 @@ const setupOptions = (url) => {
     uri: url,
     transform: (body) => {
       return cheerio.load(body)
-    },
+    }
   }
 }
 
 const getSubPageLinks = (subPageLink, submittedUrl, linksArray) => {
   if (subPageLink && subPageLink.startsWith('http')) {
-    const trimmedLink = stripTrailingSlash(
-      subPageLink.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '')
-    )
-
-    const trimmedUrl = stripTrailingSlash(
-      submittedUrl.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '')
-    )
+    const trimmedLink = stripTrailingSlash(removeUrlPrefix(subPageLink))
+    const trimmedUrl = stripTrailingSlash(removeUrlPrefix(submittedUrl))
 
     if (
       trimmedLink &&
@@ -92,6 +87,10 @@ const stripTrailingSlash = (str) => {
   return str.endsWith('/') ? str.slice(0, -1) : str
 }
 
+const removeUrlPrefix = (url) => {
+  return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '')
+}
+
 const scrapeSubPage = (url) => {
   const options = setupOptions(url)
 
@@ -102,7 +101,7 @@ const scrapeSubPage = (url) => {
 
       return {
         h1,
-        p,
+        p
       }
     })
     .catch((err) => {
