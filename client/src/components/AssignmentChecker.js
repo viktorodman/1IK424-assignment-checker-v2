@@ -69,7 +69,7 @@ const AssignmentChecker = () => {
   }
 
   const checkAllTestsPass = () => {
-    const { h1, h2, h3, p, columns, subPages } = elements
+    const { h1, h2, h3, p, columns } = elements
 
     if (
       h1 === 1 &&
@@ -77,11 +77,24 @@ const AssignmentChecker = () => {
       (h2 >= 2 || h3 >= 2) &&
       columns >= 2 &&
       hasSubPages() &&
-      subPages[0].elements.h1 === 1 &&
-      subPages[0].elements.p
+      isOneSubPagePassing()
     ) {
       setAllTestsPass(true)
     }
+  }
+
+  const isOneSubPagePassing = () => {
+    let foundMatch = false
+
+    elements.subPages.forEach((page) => {
+      const { h1, p } = page.elements
+
+      if (h1 === 1 && p) {
+        foundMatch = true
+      }
+    })
+
+    return foundMatch
   }
 
   const renderSubPageResults = () => {
