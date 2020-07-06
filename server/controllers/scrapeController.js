@@ -1,5 +1,6 @@
 const cheerio = require('cheerio')
 const rp = require('request-promise')
+const Submission = require('../models/submission')
 
 const scrapeController = {}
 
@@ -17,6 +18,21 @@ scrapeController.scrape = async (req, res, next) => {
     result.subPages = subPages
   }
   res.send(result)
+}
+
+scrapeController.submit = async (req, res, next) => {
+  const { username, url, pass } = req.body
+
+  try {
+    await Submission.findOneAndUpdate(
+      { username },
+      { username, url, pass },
+      { new: true, upsert: true }
+    )
+    res.send({ message: 'Successfully saved or updated existing submission' })
+  } catch (error) {
+    res.send(error)
+  }
 }
 
 const scrapeMainPage = (url) => {
