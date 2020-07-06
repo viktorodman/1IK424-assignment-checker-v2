@@ -1,12 +1,14 @@
 import React from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-import Home from './components/pages/Home/Home'
+import HomePage from './pages/Home'
+import SubmissionsPage from './pages/Submissions'
 
 function App () {
   return (
     <Router>
       <>
-        <Route exact path='/' component={Home} />
+        <Route exact path='/' component={HomePage} />
+        <Route path='/submissions' component={SubmissionsPage} />
       </>
     </Router>
   )

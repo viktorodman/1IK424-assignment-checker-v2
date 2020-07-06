@@ -1,11 +1,10 @@
 import React from 'react'
-import Header from '../../layouts/Header'
-import Footer from '../../layouts/Footer'
-import './Home.css'
-import CheckWebsiteForm from '../../CheckWebsiteForm'
-import GlobalContextProvider from '../../../context/GlobalContext'
-import AssignmentChecker from '../../AssignmentChecker'
-import HandInForm from '../../HandInForm'
+import Header from '../components/layouts/Header'
+import Footer from '../components/layouts/Footer'
+import CheckWebsiteForm from '../components/CheckWebsiteForm'
+import GlobalContextProvider from '../context/GlobalContext'
+import AssignmentChecker from '../components/AssignmentChecker'
+import HandInForm from '../components/HandInForm'
 
 function Home () {
   return (

@@ -1,9 +1,19 @@
 import React from 'react'
 import { AppBar, Toolbar, Typography } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+
+const useStyles = makeStyles((theme) => ({
+  appBar: {
+    background: '#ffe000',
+    color: '#000000'
+  }
+}))
 
 const Header = () => {
+  const classes = useStyles()
+
   return (
-    <AppBar color='primary' position='relative'>
+    <AppBar className={classes.appBar} position='relative'>
       <Toolbar>
         <Typography
           align='center'
