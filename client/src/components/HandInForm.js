@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import {
   Checkbox,
   FormControl,
@@ -14,23 +14,39 @@ import SendIcon from '@material-ui/icons/Send'
 
 import { GlobalContext } from '../context/GlobalContext'
 
+import ActionAlert from './ActionAlert'
+
 const useStyles = makeStyles((theme) => ({
   root: {
     '& > *': {
       margin: theme.spacing(1),
       width: '25ch'
     }
+  },
+  handInForm: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1)
   }
 }))
 
 const HandInForm = () => {
-  const { allTestsPass, currentURL } = useContext(GlobalContext)
+  const { allTestsPass, currentURL, elements } = useContext(GlobalContext)
   const [checked, setChecked] = useState(false)
   const [username, setUsername] = useState('')
   const [shouldShowMessage, setShowMessage] = useState(false)
   const [shouldShowError, setShowError] = useState(false)
 
   const classes = useStyles()
+
+  useEffect(() => {
+    setChecked(false)
+  }, [elements])
+
+  useEffect(() => {
+    if (allTestsPass) {
+      setChecked(true)
+    }
+  }, [allTestsPass])
 
   const handleToggle = () => {
     setChecked(!checked)
@@ -58,8 +74,8 @@ const HandInForm = () => {
   }
 
   return (
-    <div className='hand-in-form'>
-      {allTestsPass && (
+    <div className={classes.handInForm}>
+      {elements && (
         <Container maxWidth='sm'>
           <FormControl>
             <FormGroup>
@@ -71,9 +87,11 @@ const HandInForm = () => {
           </FormControl>
           {checked && (
             <>
-              <Grid>
+              <Grid container align='center' justify='center'>
                 <Grid item xs={12}>
-                  Yay! All tests passed. You are ready to hand in.
+                  {allTestsPass
+                    ? 'Yay! All tests passed. You are ready to hand in.'
+                    : 'NOTE: Not all tests have passed.'}
                 </Grid>
               </Grid>
               <Grid
@@ -101,16 +119,15 @@ const HandInForm = () => {
             </>
           )}
           {shouldShowMessage ? (
-            <p>
-              {currentURL} has been handed in. You may resubmit if needed, we
-              will automatically erase the previous submitted version with the
-              newer one.
-            </p>
+            <ActionAlert
+              color='success'
+              message={`${currentURL} has been handed in. You may resubmit if needed, we will automatically erase the previous submitted version with the newer one.`}
+            />
           ) : shouldShowError ? (
-            <p>
-              Failed to submit. Please try again or contact the course
-              administration.
-            </p>
+            <ActionAlert
+              color='success'
+              message='Failed to submit. Please try again or contact the course administration.'
+            />
           ) : (
             ''
           )}

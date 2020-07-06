@@ -5,7 +5,7 @@ export const GlobalContext = createContext()
 const GlobalContextProvider = (props) => {
   const [currentURL, setURL] = useState('')
   const [urlToCheck, setUrlToCheck] = useState('')
-  const [elements, setElements] = useState({})
+  const [elements, setElements] = useState(null)
   const [allTestsPass, setAllTestsPass] = useState(false)
 
   return (
