@@ -12,11 +12,22 @@ const AssignmentChecker = () => {
     }
   }, [urlToCheck])
 
-  const correctAssignment = (url) => {
+  const correctAssignment = async (url) => {
     setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-    }, 3000)
+
+    const elements = await getWebsiteElements(url)
+    setLoading(false)
+    console.log(elements)
+  }
+
+  const getWebsiteElements = async (url) => {
+    const res = await window.fetch('/api/scrape/http://google.se', {
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+    const json = await res.json()
+    return json
   }
   return (
     <div className='assignment-checker'>

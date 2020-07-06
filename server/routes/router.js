@@ -2,6 +2,6 @@ const express = require('express')
 const scrapeController = require('../controllers/scrapeController')
 const router = express.Router()
 
-router.get('/', scrapeController.index)
+router.get('/scrape/*', scrapeController.scrape)
 
 module.exports = router
