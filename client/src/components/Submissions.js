@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import {
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Link,
-  Button,
-  Container
-} from '@material-ui/core'
+import { Button, Container } from '@material-ui/core'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import SubmissionsTable from './SubmissionsTable'
+
+// function createData (username, url, pass) {
+//   return { username, url, pass }
+// }
+
+// const submissions = [
+//   createData('ab224qr', 'http://google.se', 'YES'),
+//   createData('nn222ia', 'http://google.com', 'NO'),
+//   createData('ka222vq', 'http://google.co.uk', 'YES')
+// ]
 
 const Submissions = () => {
   const [submissions, setSubmissions] = useState([])
+
   const history = useHistory()
 
   useEffect(() => {
@@ -44,30 +46,7 @@ const Submissions = () => {
           Home
         </Button>
         {submissions && submissions.length && (
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Username</TableCell>
-                  <TableCell>URL</TableCell>
-                  <TableCell>All pass</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {submissions.map((sub) => (
-                  <TableRow key={sub.username}>
-                    <TableCell>{sub.username}</TableCell>
-                    <TableCell>
-                      <Link href={sub.url} target='_blank'>
-                        {sub.url}
-                      </Link>
-                    </TableCell>
-                    <TableCell>{sub.pass ? 'YES' : 'NO'}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <SubmissionsTable submissions={submissions} />
         )}
       </Container>
     </div>

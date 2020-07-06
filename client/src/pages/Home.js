@@ -6,7 +6,7 @@ import GlobalContextProvider from '../context/GlobalContext'
 import AssignmentChecker from '../components/AssignmentChecker'
 import HandInForm from '../components/HandInForm'
 
-function Home () {
+function HomePage () {
   return (
     <GlobalContextProvider>
       <div className='Home'>
@@ -22,4 +22,4 @@ function Home () {
   )
 }
 
-export default Home
+export default HomePage
