@@ -7,19 +7,19 @@ import {
   TableSortLabel,
   TableBody,
   TableRow,
-  TableCell,
+  TableCell
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 const headCells = [
   { id: 'username', numeric: false, disablePadding: true, label: 'Username' },
   { id: 'url', numeric: true, disablePadding: false, label: 'URL' },
-  { id: 'pass', numeric: true, disablePadding: false, label: 'All pass' },
+  { id: 'pass', numeric: true, disablePadding: false, label: 'All pass' }
 ]
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(2)
   },
   visuallyHidden: {
     border: 0,
@@ -30,14 +30,14 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
     position: 'absolute',
     top: 20,
-    width: 1,
-  },
+    width: 1
+  }
 }))
 
-function SubmissionsTable({ submissions }) {
+const SubmissionsTable = ({ submissions }) => {
   const classes = useStyles()
   const [order, setOrder] = useState('asc')
-  const [orderBy, setOrderBy] = useState('calories')
+  const [orderBy, setOrderBy] = useState('username')
 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === 'asc'

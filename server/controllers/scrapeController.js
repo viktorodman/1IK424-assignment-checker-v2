@@ -10,8 +10,10 @@ scrapeController.scrape = async (req, res, next) => {
   const result = await scrapeMainPage(url)
 
   if (result.navLinks && result.navLinks.length) {
+    const links = result.navLinks.splice(0, 10)
     const subPages = []
-    for (const link of result.navLinks) {
+
+    for (const link of links) {
       const elements = await scrapeSubPage(link)
       subPages.push({ page: link, elements })
     }
@@ -62,7 +64,7 @@ const scrapeMainPage = (url) => {
         h3,
         p,
         columns,
-        navLinks
+        navLinks,
       }
     })
     .catch((err) => {
@@ -74,9 +76,10 @@ const scrapeMainPage = (url) => {
 const setupOptions = (url) => {
   return {
     uri: url,
+    timeout: 5000,
     transform: (body) => {
       return cheerio.load(body)
-    }
+    },
   }
 }
 
@@ -117,7 +120,7 @@ const scrapeSubPage = (url) => {
 
       return {
         h1,
-        p
+        p,
       }
     })
     .catch((err) => {

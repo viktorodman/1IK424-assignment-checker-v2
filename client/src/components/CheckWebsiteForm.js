@@ -26,7 +26,7 @@ const CheckWebsiteForm = () => {
     <div className='check-website-form'>
       <Container maxWidth='sm'>
         <form noValidate autoComplete='off' onSubmit={handleSubmit}>
-          <Grid container alignItems='flex-end'>
+          <Grid container alignItems='flex-end' justify='space-between'>
             <Grid item xs={8}>
               <TextField
                 fullWidth
@@ -42,6 +42,7 @@ const CheckWebsiteForm = () => {
                 color='primary'
                 onClick={handleSubmit}
                 variant='contained'
+                fullWidth
                 disabled={currentURL.length < 5}
               >
                 Check website
