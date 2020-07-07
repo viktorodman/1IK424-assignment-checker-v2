@@ -70,7 +70,7 @@ const HandInForm = () => {
 
   const handleSubmit = async () => {
     try {
-      const res = await window.fetch('/api/submit', {
+      const res = await window.fetch('/api/submission', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, url: currentURL, pass: allTestsPass }),

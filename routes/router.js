@@ -4,9 +4,9 @@ const submissionsController = require('../controllers/submissionsController')
 const router = express.Router()
 
 router.get('/scrape/*', scrapeController.scrape)
-router.post('/submit', scrapeController.submit)
-
 router.get('/submissions', submissionsController.getSubmissions)
-router.post('/submissions', submissionsController.saveSubmission)
+
+router.post('/submission', submissionsController.saveSubmission)
+router.patch('/submission', submissionsController.updateSubmission)
 
 module.exports = router

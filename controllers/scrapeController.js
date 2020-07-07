@@ -1,10 +1,7 @@
 const cheerio = require('cheerio')
 const rp = require('request-promise')
-const Submission = require('../models/submission')
 
-const scrapeController = {}
-
-scrapeController.scrape = async (req, res, next) => {
+const scrape = async (req, res, next) => {
   const url = req.params[0]
 
   const result = await scrapeMainPage(url)
@@ -20,21 +17,6 @@ scrapeController.scrape = async (req, res, next) => {
     result.subPages = subPages
   }
   res.send(result)
-}
-
-scrapeController.submit = async (req, res, next) => {
-  const { username, url, pass } = req.body
-
-  try {
-    await Submission.findOneAndUpdate(
-      { username },
-      { username, url, pass, corrected: false },
-      { new: true, upsert: true }
-    )
-    res.send({ message: 'Successfully saved or updated existing submission' })
-  } catch (error) {
-    res.send(error)
-  }
 }
 
 const scrapeMainPage = (url) => {
@@ -64,7 +46,7 @@ const scrapeMainPage = (url) => {
         h3,
         p,
         columns,
-        navLinks,
+        navLinks
       }
     })
     .catch((err) => {
@@ -79,7 +61,7 @@ const setupOptions = (url) => {
     timeout: 5000,
     transform: (body) => {
       return cheerio.load(body)
-    },
+    }
   }
 }
 
@@ -120,7 +102,7 @@ const scrapeSubPage = (url) => {
 
       return {
         h1,
-        p,
+        p
       }
     })
     .catch((err) => {
@@ -129,4 +111,6 @@ const scrapeSubPage = (url) => {
     })
 }
 
-module.exports = scrapeController
+module.exports = {
+  scrape
+}

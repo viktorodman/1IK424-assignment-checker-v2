@@ -4,16 +4,6 @@ import { Button, Container } from '@material-ui/core'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import SubmissionsTable from './SubmissionsTable'
 
-// function createData (username, url, pass) {
-//   return { username, url, pass }
-// }
-
-// const submissions = [
-//   createData('ab224qr', 'http://google.se', 'YES'),
-//   createData('nn222ia', 'http://google.com', 'NO'),
-//   createData('ka222vq', 'http://google.co.uk', 'YES')
-// ]
-
 const Submissions = () => {
   const [submissions, setSubmissions] = useState([])
 
@@ -36,12 +26,12 @@ const Submissions = () => {
   }
 
   const updateSubmission = async (submission) => {
-    const result = await window.fetch('/api/submissions', {
-      method: 'POST',
+    const result = await window.fetch('/api/submission', {
+      method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ submission }),
+      body: JSON.stringify({ submission })
     })
 
     const json = await result.json()
