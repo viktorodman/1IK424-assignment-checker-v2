@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
 
 const AssignmentChecker = () => {
   const [isLoading, setLoading] = useState(false)
+  const [showError, setShowError] = useState(false)
   const {
     urlToCheck,
     setUrlToCheck,
@@ -45,12 +46,17 @@ const AssignmentChecker = () => {
   }, [elements])
 
   const correctAssignment = async (url) => {
+    setShowError(false)
     setLoading(true)
     setElements(null)
-    const elements = await getWebsiteElements(url)
+    try {
+      const elements = await getWebsiteElements(url)
+      setElements(elements)
+      setUrlToCheck('')
+    } catch (error) {
+      setShowError(true)
+    }
     setLoading(false)
-    setElements(elements)
-    setUrlToCheck('')
   }
 
   const getWebsiteElements = async (url) => {
@@ -87,18 +93,19 @@ const AssignmentChecker = () => {
 
     elements.subPages.forEach((page) => {
       const { h1, p } = page.elements
-
-      if (h1 === 1 && p) {
-        foundMatch = true
-      }
+      if (h1 === 1 && p) foundMatch = true
     })
-
     return foundMatch
   }
 
   return (
     <div className='assignment-checker'>
       <Container maxWidth='sm'>
+        {showError && (
+          <Typography variant='body1' color='error'>
+            Something went wrong. Please contact the course administration.
+          </Typography>
+        )}
         {!elements && isLoading ? (
           <div className={classes.loadingArea}>
             <CircularProgress />

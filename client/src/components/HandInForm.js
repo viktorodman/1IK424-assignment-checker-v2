@@ -55,6 +55,11 @@ const HandInForm = () => {
     }
   }, [currentURL])
 
+  const isBeforeDeadline = () => {
+    const augustTen = new Date('2020-08-10T23:59:59+00:00')
+    return new Date() < augustTen
+  }
+
   const handleToggle = () => {
     setChecked(!checked)
   }
@@ -64,25 +69,28 @@ const HandInForm = () => {
   }
 
   const handleSubmit = async () => {
-    setChecked(false)
+    try {
+      const res = await window.fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, url: currentURL, pass: allTestsPass })
+      })
 
-    const res = await window.fetch('/api/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, url: currentURL, pass: allTestsPass })
-    })
-
-    const response = await res.json()
-    if (response.message) {
-      setShowMessage(true)
-    } else if (response.error) {
+      const response = await res.json()
+      if (response.message) {
+        setChecked(false)
+        setShowMessage(true)
+      } else if (response.error) {
+        setShowError(true)
+      }
+    } catch (error) {
       setShowError(true)
     }
   }
 
   return (
     <div className={classes.handInForm}>
-      {elements && (
+      {elements && isBeforeDeadline() && (
         <Container maxWidth='sm'>
           <FormControl>
             <FormGroup>
@@ -132,7 +140,7 @@ const HandInForm = () => {
             />
           ) : shouldShowError ? (
             <ActionAlert
-              color='success'
+              color='error'
               message='Failed to submit. Please try again or contact the course administration.'
             />
           ) : (
