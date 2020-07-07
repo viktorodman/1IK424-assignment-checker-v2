@@ -28,7 +28,7 @@ scrapeController.submit = async (req, res, next) => {
   try {
     await Submission.findOneAndUpdate(
       { username },
-      { username, url, pass },
+      { username, url, pass, corrected: false },
       { new: true, upsert: true }
     )
     res.send({ message: 'Successfully saved or updated existing submission' })

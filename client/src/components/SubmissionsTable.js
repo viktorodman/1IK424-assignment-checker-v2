@@ -7,19 +7,24 @@ import {
   TableSortLabel,
   TableBody,
   TableRow,
-  TableCell
+  TableCell,
+  Switch,
+  FormGroup,
+  FormControlLabel,
+  Link,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 const headCells = [
   { id: 'username', numeric: false, disablePadding: true, label: 'Username' },
   { id: 'url', numeric: true, disablePadding: false, label: 'URL' },
-  { id: 'pass', numeric: true, disablePadding: false, label: 'All pass' }
+  { id: 'pass', numeric: true, disablePadding: false, label: 'All pass' },
+  { id: 'corrected', numeric: true, disablePadding: false, label: 'Corrected' },
 ]
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   visuallyHidden: {
     border: 0,
@@ -30,11 +35,15 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
     position: 'absolute',
     top: 20,
-    width: 1
-  }
+    width: 1,
+  },
 }))
 
-const SubmissionsTable = ({ submissions }) => {
+const SubmissionsTable = ({
+  submissions,
+  setSubmissions,
+  updateSubmission,
+}) => {
   const classes = useStyles()
   const [order, setOrder] = useState('asc')
   const [orderBy, setOrderBy] = useState('username')
@@ -71,6 +80,17 @@ const SubmissionsTable = ({ submissions }) => {
     return stabilizedThis.map((el) => el[0])
   }
 
+  const handleCorrectedChange = (submission) => {
+    const newSubs = [...submissions]
+    const index = newSubs.findIndex((s) => s.username === submission.username)
+
+    submission.corrected = !submission.corrected
+    newSubs[index] = submission
+
+    setSubmissions(newSubs)
+    updateSubmission(submission)
+  }
+
   return (
     <div className={classes.root}>
       <Paper>
@@ -105,15 +125,33 @@ const SubmissionsTable = ({ submissions }) => {
             </TableHead>
             <TableBody>
               {sortResults(submissions, getComparator(order, orderBy)).map(
-                (row) => {
+                (sub) => {
                   return (
-                    <TableRow hover tabIndex={-1} key={row.username}>
+                    <TableRow hover tabIndex={-1} key={sub.username}>
                       <TableCell component='th' scope='row' padding='none'>
-                        {row.username}
+                        {sub.username}
                       </TableCell>
-                      <TableCell align='right'>{row.url}</TableCell>
                       <TableCell align='right'>
-                        {row.pass ? 'YES' : 'NO'}
+                        <Link href={sub.url} target='_blank'>
+                          {sub.url}
+                        </Link>
+                      </TableCell>
+                      <TableCell align='right'>
+                        {sub.pass ? 'Yes' : 'No'}
+                      </TableCell>
+                      <TableCell align='right'>
+                        <FormGroup row style={{ justifyContent: 'flex-end' }}>
+                          <FormControlLabel
+                            control={
+                              <Switch
+                                color='primary'
+                                checked={sub.corrected}
+                                onChange={() => handleCorrectedChange(sub)}
+                              />
+                            }
+                            label={sub.corrected ? 'Yes' : 'No'}
+                          />
+                        </FormGroup>
                       </TableCell>
                     </TableRow>
                   )

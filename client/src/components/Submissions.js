@@ -35,6 +35,19 @@ const Submissions = () => {
     history.push('/')
   }
 
+  const updateSubmission = async (submission) => {
+    const result = await window.fetch('/api/submissions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ submission }),
+    })
+
+    const json = await result.json()
+    console.log(json)
+  }
+
   return (
     <div className='submissions'>
       <Container maxWidth='md'>
@@ -46,7 +59,11 @@ const Submissions = () => {
           Home
         </Button>
         {submissions && submissions.length && (
-          <SubmissionsTable submissions={submissions} />
+          <SubmissionsTable
+            submissions={submissions}
+            setSubmissions={setSubmissions}
+            updateSubmission={updateSubmission}
+          />
         )}
       </Container>
     </div>

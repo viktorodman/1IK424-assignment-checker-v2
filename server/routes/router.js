@@ -7,5 +7,6 @@ router.get('/scrape/*', scrapeController.scrape)
 router.post('/submit', scrapeController.submit)
 
 router.get('/submissions', submissionsController.getSubmissions)
+router.post('/submissions', submissionsController.saveSubmissions)
 
 module.exports = router
