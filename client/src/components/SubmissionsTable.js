@@ -11,20 +11,21 @@ import {
   Switch,
   FormGroup,
   FormControlLabel,
-  Link,
+  Link
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 const headCells = [
   { id: 'username', numeric: false, disablePadding: true, label: 'Username' },
+  { id: 'handed_in', numeric: true, disablePadding: false, label: 'Handed in' },
   { id: 'url', numeric: true, disablePadding: false, label: 'URL' },
   { id: 'pass', numeric: true, disablePadding: false, label: 'All pass' },
-  { id: 'corrected', numeric: true, disablePadding: false, label: 'Corrected' },
+  { id: 'corrected', numeric: true, disablePadding: false, label: 'Corrected' }
 ]
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(2)
   },
   visuallyHidden: {
     border: 0,
@@ -35,18 +36,18 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
     position: 'absolute',
     top: 20,
-    width: 1,
-  },
+    width: 1
+  }
 }))
 
 const SubmissionsTable = ({
   submissions,
   setSubmissions,
-  updateSubmission,
+  updateSubmission
 }) => {
   const classes = useStyles()
   const [order, setOrder] = useState('asc')
-  const [orderBy, setOrderBy] = useState('username')
+  const [orderBy, setOrderBy] = useState('handed_in')
 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === 'asc'
@@ -91,6 +92,11 @@ const SubmissionsTable = ({
     updateSubmission(submission)
   }
 
+  const getReadableDate = (date) => {
+    const d = new Date(date).toLocaleString()
+    return d.substring(0, d.length - 3)
+  }
+
   return (
     <div className={classes.root}>
       <Paper>
@@ -130,6 +136,9 @@ const SubmissionsTable = ({
                     <TableRow hover tabIndex={-1} key={sub.username}>
                       <TableCell component='th' scope='row' padding='none'>
                         {sub.username}
+                      </TableCell>
+                      <TableCell align='right'>
+                        {getReadableDate(sub.handed_in)}
                       </TableCell>
                       <TableCell align='right'>
                         <Link href={sub.url} target='_blank'>

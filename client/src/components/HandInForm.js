@@ -48,6 +48,13 @@ const HandInForm = () => {
     }
   }, [allTestsPass])
 
+  useEffect(() => {
+    if (currentURL) {
+      setShowMessage(false)
+      setShowError(false)
+    }
+  }, [currentURL])
+
   const handleToggle = () => {
     setChecked(!checked)
   }
