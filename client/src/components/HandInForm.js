@@ -7,7 +7,7 @@ import {
   Container,
   TextField,
   Grid,
-  Button
+  Button,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import SendIcon from '@material-ui/icons/Send'
@@ -20,13 +20,13 @@ const useStyles = makeStyles((theme) => ({
   root: {
     '& > *': {
       margin: theme.spacing(1),
-      width: '25ch'
-    }
+      width: '25ch',
+    },
   },
   handInForm: {
     paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1)
-  }
+    paddingBottom: theme.spacing(1),
+  },
 }))
 
 const HandInForm = () => {
@@ -56,8 +56,8 @@ const HandInForm = () => {
   }, [currentURL])
 
   const isBeforeDeadline = () => {
-    const augustTen = new Date('2020-08-10T23:59:59+00:00')
-    return new Date() < augustTen
+    const deadline = new Date('2020-08-12T23:59:59+00:00')
+    return new Date() < deadline
   }
 
   const handleToggle = () => {
@@ -73,7 +73,7 @@ const HandInForm = () => {
       const res = await window.fetch('/api/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, url: currentURL, pass: allTestsPass })
+        body: JSON.stringify({ username, url: currentURL, pass: allTestsPass }),
       })
 
       const response = await res.json()
