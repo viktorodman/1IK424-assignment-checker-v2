@@ -6,7 +6,7 @@ const saveSubmission = async (req, res, next) => {
   try {
     await Submission.findOneAndUpdate(
       { username },
-      { username, url, pass, corrected: false },
+      { username, url, pass, corrected: false, handed_in: Date.now() },
       { new: true, upsert: true }
     )
     res.send({ message: 'Successfully saved or updated existing submission' })
