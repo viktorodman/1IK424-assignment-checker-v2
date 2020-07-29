@@ -28,7 +28,10 @@ const scrapeMainPage = (url) => {
       const h2 = $('h2').length
       const h3 = $('h3').length
       const p = $('p').length
-      const columns = $('div.wp-block-column').length
+      const wpBlockColumn = $('div.wp-block-column').length
+      const wpBlockJetPackColumn = $('div.wp-block-jetpack-layout-grid-column')
+        .length
+      const columns = wpBlockColumn + wpBlockJetPackColumn
 
       const navLinks = []
 
