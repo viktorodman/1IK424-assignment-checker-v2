@@ -6,7 +6,7 @@ import {
   ListItemIcon,
   Tooltip,
   Divider,
-  Paper,
+  Paper
 } from '@material-ui/core'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import ErrorIcon from '@material-ui/icons/Error'
@@ -129,10 +129,10 @@ const PagesCheckList = ({ elements, classes, hasSubPages }) => {
             )}
           </ListItemIcon>
           Sub pages: Found {hasSubPages() ? subPages.length : 0}
-          {hasSubPages() && subPages.length >= 10 && (
+          {hasSubPages() && subPages.length >= 20 && (
             <ListItemIcon>
               <Tooltip
-                title='We have only scanned the first 10 sub pages found'
+                title='We have only scanned the first 20 sub pages found'
                 placement='right'
               >
                 <HelpIcon fontSize='small' />
