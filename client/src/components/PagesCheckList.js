@@ -27,7 +27,7 @@ const PagesCheckList = ({ elements, classes, hasSubPages }) => {
       >
         <ListItem>
           <ListItemIcon>
-            {elements.h1 ? (
+            {elements.h1 && elements.h1 === 1 ? (
               <CheckCircleIcon color='primary' />
             ) : (
               <ErrorIcon color='error' />
