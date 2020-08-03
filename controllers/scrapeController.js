@@ -7,7 +7,7 @@ const scrape = async (req, res, next) => {
   const result = await scrapeMainPage(url)
 
   if (result.navLinks && result.navLinks.length) {
-    const links = result.navLinks.splice(0, 10)
+    const links = result.navLinks.splice(0, 20)
     const subPages = []
 
     for (const link of links) {
