@@ -6,7 +6,7 @@ import {
   ListItemIcon,
   Tooltip,
   Divider,
-  Paper
+  Paper,
 } from '@material-ui/core'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import ErrorIcon from '@material-ui/icons/Error'
@@ -59,6 +59,13 @@ const PagesCheckList = ({ elements, classes, hasSubPages }) => {
           <ListItemIcon>
             {h1 && h1 === 1 ? (
               <CheckCircleIcon color='primary' />
+            ) : h1 && h1 > 1 ? (
+              <Tooltip
+                title='There are more than one heading one (h1)'
+                placement='right'
+              >
+                <ErrorIcon color='error' />
+              </Tooltip>
             ) : (
               <Tooltip
                 title='A heading at level one (h1) is missing'
