@@ -105,7 +105,7 @@ const HandInForm = () => {
               <Grid container align='center' justify='center'>
                 <Grid item xs={12}>
                   {allTestsPass
-                    ? 'Yay! All tests passed. You are ready to hand in.'
+                    ? 'Yay! All tests passed. If you are done, you may hand it in.'
                     : 'NOTE: Not all tests have passed.'}
                 </Grid>
               </Grid>
