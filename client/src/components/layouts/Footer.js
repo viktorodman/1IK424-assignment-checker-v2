@@ -38,7 +38,7 @@ const Footer = () => {
           <Grid item xs={12} align='center'>
             <IconButton
               className={classes.icon}
-              href='https://github.com/WPUtvecklare'
+              href='https://github.com/adambergman1'
               target='_blank'
             >
               <GitHubIcon />
