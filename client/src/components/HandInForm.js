@@ -56,7 +56,8 @@ const HandInForm = () => {
   }, [currentURL])
 
   const isBeforeDeadline = () => {
-    const deadline = new Date('2020-08-12T23:59:59+00:00')
+    const deadline = new Date('2021-07-12T09:00:00+00:00')
+    console.log(deadline)
     return new Date() < deadline
   }
 
